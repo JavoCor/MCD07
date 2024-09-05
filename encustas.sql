@@ -100,6 +100,30 @@ CREATE TABLE Participa (
     FOREIGN KEY (id_encuesta_focus_group) REFERENCES Encuestas(id_encuesta),
     FOREIGN KEY (id_panel) REFERENCES Panel(id_panel)
 );
+CREATE TABLE encuestas_cati (
+    id_encuesta SERIAL PRIMARY KEY,
+    script TEXT NOT NULL,
+    FOREIGN KEY (id_encuesta) REFERENCES Encuestas(id_encuesta) ON DELETE CASCADE
+);
+CREATE TABLE encuestas_telefonicas_automaticas (
+    id_encuesta SERIAL PRIMARY KEY,
+    estado_llamado VARCHAR(50),
+    timestamp TIMESTAMP,
+    FOREIGN KEY (id_encuesta) REFERENCES Encuestas(id_encuesta) ON DELETE CASCADE
+);
+CREATE TABLE encuestas_focus_group (
+    id_encuesta SERIAL PRIMARY KEY,
+    es_presencial BOOLEAN,
+    id_moderador INT,
+    FOREIGN KEY (id_encuesta) REFERENCES Encuestas(id_encuesta) ON DELETE CASCADE,
+    FOREIGN KEY (id_moderador) REFERENCES Moderadores(id_moderador)
+);
+CREATE TABLE encuestas_panel (
+    id_encuesta SERIAL PRIMARY KEY,
+    id_panel INT,
+    FOREIGN KEY (id_encuesta) REFERENCES Encuestas(id_encuesta) ON DELETE CASCADE,
+    FOREIGN KEY (id_panel) REFERENCES Panel(id_panel)
+);
 
 
 
@@ -125,16 +149,51 @@ INSERT INTO Campañas (muestra_n, margen_error, satisfaccion_cliente, nombre_cam
 INSERT INTO Campañas (muestra_n, margen_error, satisfaccion_cliente, nombre_campaña, id_cliente) VALUES (1100, 2.9, 86.0, 'Campaña 9', 9);
 INSERT INTO Campañas (muestra_n, margen_error, satisfaccion_cliente, nombre_campaña, id_cliente) VALUES (900, 3.0, 94.0, 'Campaña 10', 10);
 
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta de satisfacción', 10000, 1);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Estudio de mercado', 15000, 2);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta de producto', 20000, 3);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta de consumo', 8000, 4);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta de opinión', 12000, 5);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta telefónica', 6000, 6);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta en línea', 5000, 7);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta de prueba de producto', 18000, 8);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta de segmentación', 14000, 9);
-INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('Encuesta demográfica', 16000, 10);
+-- Insertamos las encuestas en la tabla principal Encuestas
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 5000, 1);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 6000, 2);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 5500, 3);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 7000, 4);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 6500, 5);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 4800, 6);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 5200, 7);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 5800, 8);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 6200, 9);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('cati', 6300, 10);
+
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 4000, 1);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 4500, 2);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 5000, 3);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 5200, 4);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 4800, 5);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 4700, 6);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 4600, 7);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 5100, 8);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 4950, 9);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('telefonica_automatica', 5050, 10);
+
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 10000, 1);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 10500, 2);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 11000, 3);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 9800, 4);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 9500, 5);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 9200, 6);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 10000, 7);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 11000, 8);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 9300, 9);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('focus_group', 9400, 10);
+
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 6000, 1);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 7000, 2);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 7500, 3);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 6800, 4);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 7200, 5);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 7800, 6);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 6900, 7);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 8000, 8);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 8400, 9);
+INSERT INTO Encuestas (tipo, costo, id_campaña) VALUES ('panel', 8500, 10);
+
 
 INSERT INTO Cuestionario (id_encuesta) VALUES (1);
 INSERT INTO Cuestionario (id_encuesta) VALUES (2);
@@ -235,3 +294,47 @@ INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALU
 INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALUES ('Luisa Fernández, 29 años', 8, 8);
 INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALUES ('Martín Torres, 41 años', 9, 9);
 INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALUES ('Sofía Ramírez, 34 años', 10, 10);
+
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (1, 'Script para encuesta CATI 1');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (2, 'Script para encuesta CATI 2');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (3, 'Script para encuesta CATI 3');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (4, 'Script para encuesta CATI 4');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (5, 'Script para encuesta CATI 5');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (6, 'Script para encuesta CATI 6');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (7, 'Script para encuesta CATI 7');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (8, 'Script para encuesta CATI 8');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (9, 'Script para encuesta CATI 9');
+INSERT INTO encuestas_cati (id_encuesta, script) VALUES (10, 'Script para encuesta CATI 10');
+
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (11, 'Completada', '2024-01-01 10:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (12, 'Fallida', '2024-01-02 11:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (13, 'En progreso', '2024-01-03 12:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (14, 'Completada', '2024-01-04 13:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (15, 'Completada', '2024-01-05 14:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (16, 'Fallida', '2024-01-06 15:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (17, 'Completada', '2024-01-07 16:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (18, 'En progreso', '2024-01-08 17:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (19, 'Completada', '2024-01-09 18:00:00');
+INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (20, 'Fallida', '2024-01-10 19:00:00');
+
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (21, TRUE, 1);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (22, FALSE, 2);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (23, TRUE, 3);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (24, FALSE, 4);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (25, TRUE, 5);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (26, TRUE, 6);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (27, FALSE, 7);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (28, TRUE, 8);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (29, FALSE, 9);
+INSERT INTO encuestas_focus_group (id_encuesta, es_presencial, id_moderador) VALUES (30, TRUE, 10);
+
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (31, 1);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (32, 2);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (33, 3);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (34, 4);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (35, 5);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (36, 6);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (37, 7);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (38, 8);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (39, 9);
+INSERT INTO encuestas_panel (id_encuesta, id_panel) VALUES (40, 10);
