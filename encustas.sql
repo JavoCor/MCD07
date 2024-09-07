@@ -103,7 +103,10 @@ CREATE TABLE Participa (
 CREATE TABLE encuestas_cati (
     id_encuesta SERIAL PRIMARY KEY,
     script TEXT NOT NULL,
+    id_operador INT,
+    FOREIGN KEY (id_operador) REFERENCES Operadores(id_operador),
     FOREIGN KEY (id_encuesta) REFERENCES Encuestas(id_encuesta) ON DELETE CASCADE
+
 );
 CREATE TABLE encuestas_telefonicas_automaticas (
     id_encuesta SERIAL PRIMARY KEY,
@@ -124,8 +127,28 @@ CREATE TABLE encuestas_panel (
     FOREIGN KEY (id_encuesta) REFERENCES Encuestas(id_encuesta) ON DELETE CASCADE,
     FOREIGN KEY (id_panel) REFERENCES Panel(id_panel)
 );
+CREATE VIEW costo_encuesta as
+(
+select enc.id_encuesta, enc.costo as costo_total, 'encuesta_telefonica_automatica' as modalidad
+from public.encuestas enc
+         inner join encuestas_telefonicas_automaticas eta on enc.id_encuesta = eta.id_encuesta
 
+union
 
+select enc.id_encuesta, enc.costo + ops.costo as costo_total, 'encuesta_cati' as modalidad
+from public.encuestas enc
+         inner join public.encuestas_cati ec on ec.id_encuesta = enc.id_encuesta
+         inner join operadores ops on ops.id_operador = ec.id_operador
+
+union
+
+select enc.id_encuesta, enc.costo + mod.costo as costo_total, 'focus_group' as modalidad
+from public.encuestas enc
+         inner join public.encuestas_focus_group efg on efg.id_encuesta = enc.id_encuesta
+         inner join moderadores mod on mod.id_moderador = efg.id_moderador
+);
+
+drop view public.costo_encuesta;
 
 INSERT INTO Clientes (nombre, tipo) VALUES ('Empresa X', 'Productos de consumo masivo');
 INSERT INTO Clientes (nombre, tipo) VALUES ('Empresa Y', 'Tecnología');
@@ -295,16 +318,18 @@ INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALU
 INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALUES ('Martín Torres, 41 años', 9, 9);
 INSERT INTO Participa (datos_personales, id_encuesta_focus_group, id_panel) VALUES ('Sofía Ramírez, 34 años', 10, 10);
 
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (1, 'Script para encuesta CATI 1');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (2, 'Script para encuesta CATI 2');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (3, 'Script para encuesta CATI 3');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (4, 'Script para encuesta CATI 4');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (5, 'Script para encuesta CATI 5');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (6, 'Script para encuesta CATI 6');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (7, 'Script para encuesta CATI 7');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (8, 'Script para encuesta CATI 8');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (9, 'Script para encuesta CATI 9');
-INSERT INTO encuestas_cati (id_encuesta, script) VALUES (10, 'Script para encuesta CATI 10');
+
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (1, 'Script para encuesta CATI 1', 1);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (2, 'Script para encuesta CATI 2', 2);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (3, 'Script para encuesta CATI 3', 3);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (4, 'Script para encuesta CATI 4', 4);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (5, 'Script para encuesta CATI 5', 5);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (6, 'Script para encuesta CATI 6', 6);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (7, 'Script para encuesta CATI 7', 7);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (8, 'Script para encuesta CATI 8', 8);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (9, 'Script para encuesta CATI 9', 9);
+INSERT INTO encuestas_cati (id_encuesta, script, id_operador) VALUES (10, 'Script para encuesta CATI 10', 10);
+
 
 INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (11, 'Completada', '2024-01-01 10:00:00');
 INSERT INTO encuestas_telefonicas_automaticas (id_encuesta, estado_llamado, timestamp) VALUES (12, 'Fallida', '2024-01-02 11:00:00');
